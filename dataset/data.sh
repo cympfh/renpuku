@@ -18,6 +18,12 @@ for raceId in $(cat races.txt); do
     )
 
     RENPUKU_ODDS=$(
+       cat $HTML | grep -A 10 '<th>3連複' |
+            grep 円 | grep -o '[0-9][0-9,]*' | head -1 | tr -d , |
+            awk '{printf "%.2f", ($1/100)}'
+    )
+
+    RENTAN_ODDS=$(
         cat $HTML |
             grep -A 5 '→[0-9]*→' |
             grep 円 | grep -o '[0-9][0-9,]*' | head -1 | tr -d , |
@@ -30,6 +36,6 @@ for raceId in $(cat races.txt); do
             tr '\n' ',' | sed 's/,$//g'
     )
 
-    printf "%s\t%s\t%s\t%s\n" $raceId ${TAN_ODDS} ${RENPUKU_ODDS} $ORDER
+    printf "%s\t%s\t%s\t%s\t%s\n" $raceId ${TAN_ODDS} ${RENPUKU_ODDS} ${RENTAN_ODDS} $ORDER
 
 done
